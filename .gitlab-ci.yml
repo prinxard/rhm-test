@@ -1,0 +1,12 @@
+image: node:18-alpine
+
+stages:
+   - test
+
+start_app:
+   stage: test
+   before_script:
+      - npm install -f
+   script:
+      - npm run dev -f
+
