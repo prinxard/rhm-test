@@ -3,6 +3,7 @@ image: node:18-alpine
 stages:
    - start
    - test
+   - build
 
 start_app:
    stage: start
@@ -20,5 +21,18 @@ app test:
       - sleep 10
       - apk --no-cache add curl
       - curl "http://localhost:3000"
+
+build_image:
+   stage: build
+   image: docker:24.0.4-cli-alpine3.18
+   services:
+      - docker:24.0.4-dind
+   variables:
+      - DOCKER_TLS_CERTDIR: "/certs"
+   before_script:
+      - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+   script:
+      - docker build -t bespoque/rhm:1.0 .
+      - docker push bespoque/rhm:1.0
 
 
