@@ -2,12 +2,22 @@ image: node:18-alpine
 
 stages:
    - start
-   
+   - test
+
 start_app:
    stage: start
    before_script:
       - npm install -f
    script:
       - npm run dev -f &
+
+app test:
+   stage: test
+   before_script:
+      - npm install -f
+   script:
+      - npm run dev -f &
+      - sleep 10
+      - curl "http://localhost:3000"
 
 
