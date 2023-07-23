@@ -1,3 +1,4 @@
 .gitignore
 .gitlab-ci.yml
 report.20210215.162632.11768.0.001.json
+./cache
