@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rhm-app-service
+  namespace: kgirs
+spec:
+  selector:
+    app: rhm-app
+  ports:
+    - protocol: TCP
+      port: 80        # Port to expose on the service
+      targetPort: 3000  # Port your Node.js app is listening on inside the container
+  type: ClusterIP
