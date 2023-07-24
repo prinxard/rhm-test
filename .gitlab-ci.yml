@@ -1,19 +1,11 @@
 image: node:18-alpine
 
 stages:
-   - start
    - test
    - build
    - deploy
 
 start_app:
-   stage: start
-   before_script:
-      - npm install -f
-   script:
-      - npm run dev -f &
-
-app test:
    stage: test
    before_script:
       - npm install -f
@@ -45,5 +37,5 @@ deploy:
       - kubectl config get-contexts
       - kubectl config use-context bespoqueng/rhmlive:rhm-agent
       - kubectl get pods
-      - kubectl create -f ./manifest/.
+      - kubectl apply -f ./manifest/.
 
