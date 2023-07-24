@@ -28,8 +28,13 @@ build_image:
       - docker build -t bespoque/rhm:prod-1.0 .
       - docker push bespoque/rhm:prod-1.0
 
-deploy:
+deploy_prod:
    stage: deploy
+   script:
+      - echo "Deploy to production server"
+   environment:
+      name: production
+      url: http://rhm.hrsystems.com.ng
    image:
       name: bitnami/kubectl:latest
       entrypoint: ['']
