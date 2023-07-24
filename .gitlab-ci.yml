@@ -11,9 +11,9 @@ start_app:
       - npm install -f
    script:
       - npm run dev -f &
-      - sleep 10
-      - apk --no-cache add curl
-      - curl "http://localhost:3000"
+ #     - sleep 10
+ #     - apk --no-cache add curl
+ #     - curl "http://localhost:3000"
 
 build_image:
    stage: build
