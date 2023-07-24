@@ -3,21 +3,19 @@ kind: Deployment
 metadata:
   name: nginx-deployment
   labels:
-    app: web
+    app: nginx
 spec:
+  replicas: 3  # Set the number of desired replicas for Nginx pods
   selector:
     matchLabels:
-      app: web
-  replicas: 5
-  strategy:
-    type: RollingUpdate
+      app: nginx
   template:
     metadata:
       labels:
-        app: web
+        app: nginx
     spec:
       containers:
-       —name: nginx
-          image: nginx
+        - name: nginx
+          image: nginx:latest  # Replace this with your desired Nginx container image
           ports:
-           —containerPort: 80
+            - containerPort: 80  # Expose Nginx on port 80 inside the container
