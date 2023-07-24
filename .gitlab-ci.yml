@@ -43,6 +43,6 @@ deploy:
       entrypoint: ['']
    script:
       - kubectl config get-contexts
-      - kubectl config use-context bespoqueng/rhmlive/-/tree/main/.gitlab/agents/rhm-agent:rhm-agent
+      - kubectl config use-context bespoqueng/rhmlive:rhm-agent
       - kubectl get pods
 
