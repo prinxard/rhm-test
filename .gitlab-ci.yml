@@ -25,8 +25,8 @@ build_image:
    before_script:
       - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
    script:
-      - docker build -t bespoque/rhm:prod-1.1 .
-      - docker push bespoque/rhm:prod-1.1
+      - docker build -t bespoque/rhm:prod-1.2 .
+      - docker push bespoque/rhm:prod-1.2
 
 deploy_prod:
    stage: deploy
