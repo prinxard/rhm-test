@@ -1,79 +1,250 @@
-import React, { useRef } from 'react'
-import { CoatOfArms, KgirsLogo, KogiGov, Signature } from '../../../components/Images/Images'
+import React from "react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import url from '../../../config/url';
-import setAuthToken from '../../../functions/setAuthToken';
+import url from "../../../config/url";
+import setAuthToken from "../../../functions/setAuthToken";
 import { formatNumber } from "../../../functions/numbers";
 import Loader from "react-loader-spinner";
-import QRCode from 'react-qr-code';
-
 
 
 export default function MultipleCollection() {
-    const [multipleSearchData, setmultipleSearchData] = useState([])
+    const [multipleSearchData, setmultipleSearchData] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const recordsPerPage = 100;
+    const totalRecords = multipleSearchData.length;
+    const recordsStart = (currentPage - 1) * recordsPerPage + 1;
+    const recordsEnd = Math.min(currentPage * recordsPerPage, totalRecords);
+    const recordsRemaining = totalRecords - recordsEnd;
+
     const router = useRouter();
+
+    const getStyles = () => {
+        const stylesheets = Array.from(document.styleSheets);
+        const cssText = stylesheets
+            .map((sheet) =>
+                Array.from(sheet.cssRules)
+                    .map((rule) => rule.cssText)
+                    .join("")
+            )
+            .join("");
+
+        return cssText;
+    };
 
     useEffect(() => {
         if (router && router.query) {
             let searchDate = router.query.ref;
             let tranDate = {
-                "tranDate": searchDate
-            }
+                tranDate: searchDate,
+            };
             setAuthToken();
             const fetchPost = async () => {
-                setIsFetching(true)
-                axios.post(`${url.BASE_URL}collection/view-collections`, tranDate)
-                    .then(function (response) {
-                        let search = response.data.body;
-                        setIsFetching(false)
-                        setmultipleSearchData(search)
-                        console.log("search", search);
-                    })
-                    .catch(function (error) {
-                        setIsFetching(false)
-                        // if (error.response) {
-                        //     setmultipleSearchErr(error.response.data.message)
-                        // }
-
-                    })
+                setIsFetching(true);
+                try {
+                    const response = await axios.post(
+                        `${url.BASE_URL}collection/view-collections`,
+                        tranDate
+                    );
+                    let search = response.data.body;
+                    setIsFetching(false);
+                    setmultipleSearchData(search);
+                    console.log('search', search);
+                } catch (error) {
+                    setIsFetching(false);
+                    console.log('Error', error);
+                }
             };
             fetchPost();
         }
     }, [router]);
 
-    const handleDownload = () => {
-        const element = document.getElementById('pdf-content');
+    const handleDownload = async () => {
+        const currentRecords = multipleSearchData.slice(
+            (currentPage - 1) * recordsPerPage,
+            currentPage * recordsPerPage
+        );
 
-        const printWindow = window.open('', '_blank');
-        const htmlContent = `
+
+        const qrCodeBase64Array = await Promise.all(
+            currentRecords.map((record) => getQRCodeBase64(record.ref))
+        );
+
+        const pdfContent = generatePDFContent(currentRecords, qrCodeBase64Array);
+
+        const styles = `<style>${getStyles()}</style>`;
+        const htmlWithStyles = `
         <html>
           <head>
-            <title>Collection receipt</title>
-            <link rel="stylesheet" href="https://cdn.tailwindcss.com/2.2.19/tailwind.min.css">
-            <style>
-              ${getStyles()}
-            </style>
+            ${styles}
           </head>
-          <body class="bg-white">
-            ${element.innerHTML}
+          <body>
+            ${pdfContent}
           </body>
         </html>
       `;
-        printWindow.document.write(htmlContent);
-        printWindow.document.close();
-        printWindow.print();
+
+
+        const printWindow = window.open("", "_blank");
+        printWindow.document.open();
+
+        const preloadImages = async () => {
+            const imagesToPreload = [
+                '/images/icons/coat of arms.png',
+                '/images/kog_govt.png',
+                '/images/logo2.png',
+                '/images/signature.png',
+            ];
+    
+            for (const element of qrCodeBase64Array) {
+                imagesToPreload.push(element);
+            }
+            
+            const promises = imagesToPreload.map((image) => {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = image;
+                });
+            });
+
+            try {
+                await Promise.all(promises);
+                generateAndPrintPDF();
+            } catch (error) {
+                console.error('Error preloading images:', error);
+            }
+        };
+
+        preloadImages();
+
+        const generateAndPrintPDF = () => {
+
+            // Write the content to the print window and close it after printing
+            printWindow.document.write(htmlWithStyles);
+            printWindow.document.close();
+            printWindow.print();
+            printWindow.close();
+
+            if (currentPage < Math.ceil(multipleSearchData.length / recordsPerPage)) {
+                setCurrentPage(currentPage + 1);
+            }
+        }
+    }
+
+    const generatePDFContent = (records, qrCodeBase64Array) => {
+        return `
+  <div>
+     ${records
+                .map(
+                    (record, index) =>
+                        `
+     <div class="border p-4 mb-2" style="page-break-after: always;" key=${record.idpymt}>
+         <p>KOGI STATE GOVERNMENT</p>
+         <section class="flex justify-between">
+             <p class="font-bold">REVENUE RECEIPT</p>
+             <p class="font-bold">${record.ref || "-"}</p>
+         </section>
+         <section class="flex justify-end mt-3">
+             <img src="/images/icons/coat of arms.png" width='60' height='25' />
+             <img src="/images/kog_govt.png" width='73' height='30' />
+             <img src="/images/logo2.png" width='50' height='50' />
+         </section>
+         <div class="flex justify-between">
+             <div>
+                 <div class="grid grid-cols-6 gap-2">
+                     <p>PAID BY:</p>
+                     <p class=" col-span-4">${record.taxpayerName || "-"
+                        }</p>
+                 </div>
+                 <div class="grid grid-cols-6 gap-2">
+                     <p >PAYER ID:</p>
+                     <p class=" col-span-2">${record.t_payer || "-"}</p>
+                 </div>
+                 <div class="grid grid-cols-6 gap-2">
+                     <p>ADDRESS:</p>
+                     <p class=" col-span-4">${record.taxpayerAddress || "-"
+                        }</p>
+                 </div>
+                 <div class="flex my-4">
+                     <div class='w-16 border-b-2'>
+                     </div>
+                     <p class='align-self-center'>Details</p>
+                     <div class="border-b-2 w-3/4 ">
+                     </div>
+                 </div>
+             </div>
+             <div class="mt-3 mr-3">
+                 <div>
+                     <img src="${qrCodeBase64Array[index]}" alt="Random Image" />
+                 </div>
+             </div>
+         </div>
+         <div class="">
+             <div class="grid grid-cols-6 gap-2">
+                 <p>PAYMENT DATE:</p>
+                 <p class=" col-span-2">${record.tran_date || "-"}</p>
+             </div>
+             <div class="grid grid-cols-6 gap-2">
+                 <p>AMOUNT:</p>
+                 <div class="col-span-4">
+                     <p class="">NGN ${formatNumber(record.amount) || "-"
+                        }</p>
+                 </div>
+             </div>
+             <div class="grid grid-cols-7 gap-2">
+                 <p>Details:</p>
+                 <p class=" col-span-5 pl-4"> ${record.details || "-"
+                        } </p>
+             </div>
+             <div class="grid grid-cols-6 gap-2">
+                 <p>PAID AT:</p>
+                 <p class=""> ${record.channel_id || "-"} </p>
+             </div>
+             <div class="grid grid-cols-6 gap-2">
+                 <p>AGENCY:</p>
+                 <div class="col-span-3">
+                     <p class=""> INTERNAL REVENUE SERVICE </p>
+                 </div>
+             </div>
+             <div class="grid grid-cols-6 gap-2">
+                 <p>TAX STATION:</p>
+                 <p class=""> ${record.station || "-"} </p>
+             </div>
+             <div class="border-b-2 mt-3 w-4/4 ">
+             </div>
+         </div>
+
+         <div class="flex justify-between">
+             <div></div>
+             <div class="mt-2">
+                 <img src="/images/signature.png" width='100' height='30' />
+                 <hr />
+                 Authorized Signatory
+             </div>
+         </div>
+     </div>
+     `
+                )
+                .join("")}
+</div>
+        `;
     };
 
-    const getStyles = () => {
-        const stylesheets = Array.from(document.styleSheets);
-        const cssText = stylesheets
-            .map((sheet) => Array.from(sheet.cssRules).map((rule) => rule.cssText).join(''))
-            .join('');
-
-        return cssText;
+    const getQRCodeBase64 = async (idpymt) => {
+        const baseReceiptVer = `https://irs.kg.gov.ng/verify/verify_receipt.php?ref=${idpymt}`;
+        const qrCodeURL = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${baseReceiptVer}`;
+        const response = await fetch(qrCodeURL);
+        const blob = await response.blob();
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                resolve(reader.result);
+            };
+            reader.readAsDataURL(blob);
+        });
     };
 
     return (
@@ -91,114 +262,26 @@ export default function MultipleCollection() {
                     />
                     <p className="font-bold">Processing...</p>
                 </div>
-            ) :
-
-
-                <div className='rounded-lg p-6 bg-white border border-gray-100 dark:bg-gray-900 dark:border-gray-800'>
+            ) : (
+                <div>
                     <div className="flex justify-end mb-2">
-                        <button onClick={handleDownload} className="btn w-32 bg-green-600 btn-default text-white
-                    btn-outlined bg-transparent rounded-md">Download PDF</button>
+                        <button
+                            onClick={handleDownload}
+                            className="btn w-32 bg-green-600 btn-default text-white
+                    btn-outlined bg-transparent rounded-md"
+                        >
+                            Download PDF
+                        </button>
                     </div>
 
                     <div id="pdf-content">
-                        {multipleSearchData.map((el, i) => (
-                            <div className="border p-4" style={{marginBottom: "24rem"}} key={el.idpymt}>
-                                <p>KOGI STATE GOVERNMENT</p>
-                                <section className="flex justify-between">
-                                    <p className="font-bold">REVENUE RECEIPT</p>
-                                    <p className="font-bold">{el.ref}</p>
-                                </section>
-                                <section className="flex justify-end mt-8">
-                                    <CoatOfArms />
-                                    <KogiGov />
-                                    <KgirsLogo />
-                                </section>
-                                <div className="flex justify-between">
-                                    <div>
-                                        <div className="grid grid-cols-6 gap-2">
-                                            <p>PAID BY:</p>
-                                            <p className="font-bold col-span-2">{el.taxpayerName}</p>
-                                        </div>
-                                        <div className="grid grid-cols-6 gap-2">
-                                            <p>PAYER ID:</p>
-                                            <p className="font-bold col-span-2">{el.t_payer}</p>
-                                        </div>
-                                        <div className="grid grid-cols-6 gap-2">
-                                            <p>ADDRESS:</p>
-                                            <p className="font-bold col-span-2">{el.taxpayerAddress}</p>
-                                        </div>
-                                        <div className="flex mt-10">
-                                            <div className='w-16 border-b-2'>
-                                            </div>
-                                            <p className='align-self-center'>Details</p>
-                                            <div className="border-b-2 w-3/4 ">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="mt-6 mr-6">
-                                        <QRCode
-                                            value={`https://irs.kg.gov.ng/verify/verify_receipt.php?ref=${el.ref}`}
-                                            size={120}
-                                        />
-                                    </div>
-
-                                </div>
-                                <div className="mt-3">
-                                    <div className="grid grid-cols-6 gap-2">
-                                        <p>PAYMENT DATE:</p>
-                                        <p className="font-bold col-span-2">{el.tran_date}</p>
-                                    </div>
-                                    <div className="grid grid-cols-6 gap-2">
-                                        <p>AMOUNT:</p>
-                                        <div className="col-span-4">
-                                            <p className="font-bold">NGN {formatNumber(el.amount)}</p>
-                                            {/* <small>Eighty thousand seven hundred and thirty two naira only</small> */}
-                                        </div>
-                                    </div>
-                                    {/* <div className="grid grid-cols-6 gap-2">
-                                        <p>BEING:</p>
-                                        <div className="col-span-3">
-                                            <p className="font-bold"> {`Payment for (${el.rev_sub})`} </p>
-                                            <small>{el.revenueItem}</small>
-                                        </div>
-                                    </div> */}
-                                    <div className="grid grid-cols-6 gap-2">
-                                        <p>Details:</p>
-                                        <p className="font-bold"> {el.details} </p>
-                                    </div>
-                                    <div className="grid grid-cols-6 gap-2">
-                                        <p>PAID AT:</p>
-                                        <p className="font-bold"> {el.channel_id} </p>
-                                    </div>
-                                    <div className="grid grid-cols-6 gap-2">
-                                        <p>AGENCY:</p>
-                                        <div className="col-span-3">
-                                            <p className="font-bold"> INTERNAL REVENUE SERVICE </p>
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-6 gap-2">
-                                        <p>TAX STATION:</p>
-                                        <p className="font-bold"> {el.station} </p>
-                                    </div>
-                                    <div className="border-b-2 mt-3 w-4/4 ">
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-between">
-                                    <div></div>
-                                    <div className="mt-2">
-                                        <Signature />
-                                        <hr />
-                                        Authorized Signatory
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-
+                        <p class="text-gray-800">
+                            Records to download: {recordsStart} - {recordsEnd}
+                        </p>
+                        <p class="text-gray-800">Records Remaining: {recordsRemaining}</p>
                     </div>
                 </div>
-            }
+            )}
         </>
-    )
+    );
 }
