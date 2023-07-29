@@ -6,7 +6,7 @@ metadata:
   labels:
     app: rhm-app
 spec:
-  replicas: 3  # Number of replicas/instances you want to run
+  replicas: 1  # Number of replicas/instances you want to run
   selector:
     matchLabels:
       app: rhm-app
