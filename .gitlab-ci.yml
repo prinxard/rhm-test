@@ -42,5 +42,6 @@ deploy_prod:
       - kubectl config get-contexts
       - kubectl config use-context bespoqueng/rhmlive:rhm-agent
       - kubectl get pods
+      - kubectl delete deploy rhm-app-deployment -n kgirs
       - kubectl apply -f ./manifest/.
 
