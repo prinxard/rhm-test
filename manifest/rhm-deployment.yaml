@@ -21,6 +21,3 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3000  # Replace this with the port on which your Node.js application listens
-          env:
-            - name: NODE_ENV
-              value: production
