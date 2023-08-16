@@ -25,8 +25,9 @@ build_image:
    before_script:
       - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
    script:
-      - docker build -t bespoque/rhm:prod-1.4@$CI_COMMIT_SHORT_SHA .
-      - docker push bespoque/rhm:prod-1.4@$CI_COMMIT_SHORT_SHA
+      - echo $CI_COMMIT_SHORT_SHA
+      - docker build -t bespoque/rhm:prod-1.4-$CI_COMMIT_SHORT_SHA .
+      - docker push bespoque/rhm:prod-1.4-$CI_COMMIT_SHORT_SHA
 
 deploy_prod:
    stage: deploy
