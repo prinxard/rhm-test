@@ -60,6 +60,7 @@ deploy_prod:
    environment:
       name: production
       url: http://$PRODUCTION_DOMAIN
+   when: manual
    image:
       name: bitnami/kubectl:latest
       entrypoint: ['']
