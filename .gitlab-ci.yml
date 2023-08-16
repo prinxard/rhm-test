@@ -25,8 +25,8 @@ build_image:
    before_script:
       - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
    script:
-      - docker build -t bespoque/rhm:prod-1.4.2 .
-      - docker push bespoque/rhm:prod-1.4.2
+      - docker build -t bespoque/rhm:prod-1.4@$CI_COMMIT_SHORT_SHA .
+      - docker push bespoque/rhm:prod-1.4@$CI_COMMIT_SHORT_SHA
 
 deploy_prod:
    stage: deploy
@@ -39,9 +39,10 @@ deploy_prod:
       name: bitnami/kubectl:latest
       entrypoint: ['']
    script:
+      - echo $CI_COMMIT_SHORT_SHA
       - kubectl config get-contexts
       - kubectl config use-context bespoqueng/rhmlive:rhm-agent
       - kubectl get pods
-      - kubectl delete deploy rhm-app-deployment -n kgirs
+      - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./manifest/rhm-deployment.yaml
       - kubectl apply -f ./manifest/.
 
