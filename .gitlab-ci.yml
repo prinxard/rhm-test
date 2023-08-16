@@ -3,7 +3,12 @@ image: node:lts-alpine3.18
 stages:
    - test
    - build
-   - deploy
+   - deploy staging
+   - deploy production
+
+variables:
+   STAGING_DOMAIN: rhm-dev.hrsystems.com.ng
+   PRODUCTION_DOMAIN: rhm.hrsystems.com.ng
 
 start_app:
    stage: test
@@ -29,13 +34,13 @@ build_image:
       - docker build -t bespoque/rhm:prod-1.4-$CI_COMMIT_SHORT_SHA .
       - docker push bespoque/rhm:prod-1.4-$CI_COMMIT_SHORT_SHA
 
-deploy_prod:
-   stage: deploy
+deploy_stage:
+   stage: deploy staging
    script:
-      - echo "Deploy to production server"
+      - echo "Deploy to staging server"
    environment:
-      name: production
-      url: http://rhm.hrsystems.com.ng
+      name: staging
+      url: http://$STAGING_DOMAIN
    image:
       name: bitnami/kubectl:latest
       entrypoint: ['']
@@ -43,7 +48,27 @@ deploy_prod:
       - echo $CI_COMMIT_SHORT_SHA
       - kubectl config get-contexts
       - kubectl config use-context bespoqueng/rhmlive:rhm-agent
-      - kubectl get pods
+      - kubectl get pods -n kgirs-dev
       - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./manifest/rhm-deployment.yaml
-      - kubectl apply -f ./manifest/.
+      - sed -i "s/%%URL%%/$STAGING_DOMAIN/" ./manifest/rhm-app-ingress.yaml
+      - kubectl apply -f ./manifest/. -n kgirs-dev
+
+deploy_prod:
+   stage: deploy production
+   script:
+      - echo "Deploy to production server"
+   environment:
+      name: production
+      url: http://$PRODUCTION_DOMAIN
+   image:
+      name: bitnami/kubectl:latest
+      entrypoint: ['']
+   script:
+      - echo $CI_COMMIT_SHORT_SHA
+      - kubectl config get-contexts
+      - kubectl config use-context bespoqueng/rhmlive:rhm-agent
+      - kubectl get pods -n kgirs
+      - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./manifest/rhm-deployment.yaml
+      - sed -i "s/%%URL%%/$PRODUCTION_DOMAIN/" ./manifest/rhm-app-ingress.yaml
+      - kubectl apply -f ./manifest/. -n kgirs
 

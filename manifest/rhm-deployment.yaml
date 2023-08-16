@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rhm-app-deployment
-  namespace: kgirs
+#  namespace: kgirs
   labels:
     app: rhm-app
 spec:

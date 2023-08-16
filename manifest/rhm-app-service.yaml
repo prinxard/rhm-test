@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: rhm-app-service
-  namespace: kgirs
+#  namespace: kgirs
 spec:
   selector:
     app: rhm-app
