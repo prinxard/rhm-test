@@ -5,7 +5,7 @@ const url = {
   // BASE_URL: "https://rhmlive.bespoque.dev/api/v1/",
 
   // Test Db
-  BASE_URL: "%%DB%%",
+  BASE_URL: "https://%%DB%%.bespoque.dev/api/v1/",
 
 };
 

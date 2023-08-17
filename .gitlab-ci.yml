@@ -9,8 +9,8 @@ stages:
 variables:
    STAGING_DOMAIN: rhm-dev.hrsystems.com.ng
    PRODUCTION_DOMAIN: rhm.hrsystems.com.ng
-   TEST_DB: https://rhmapi.bespoque.dev/api/v1/
-   LIVE_DB: https://rhmlive.bespoque.dev/api/v1/
+   TEST_DB: rhmapi
+   LIVE_DB: rhmlive
 
 start_app:
    stage: test
