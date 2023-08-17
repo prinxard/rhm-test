@@ -68,7 +68,7 @@ deploy_stage:
       - kubectl config use-context bespoqueng/rhmlive:rhm-agent
       - kubectl get pods -n kgirs-dev
       - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./manifest/rhm-deployment.yaml
-       - sed -i "s/%%EVN%%/test/" ./manifest/rhm-deployment.yaml
+      - sed -i "s/%%EVN%%/test/" ./manifest/rhm-deployment.yaml
       - sed -i "s/%%URL%%/$STAGING_DOMAIN/" ./manifest/rhm-app-ingress.yaml
       - kubectl apply -f ./manifest/. -n kgirs-dev
 
