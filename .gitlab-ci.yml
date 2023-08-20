@@ -59,6 +59,8 @@ deploy_stage:
    environment:
       name: staging
       url: http://$STAGING_DOMAIN
+   only:
+      - main
    image:
       name: bitnami/kubectl:latest
       entrypoint: ['']
@@ -80,6 +82,8 @@ deploy_prod:
       name: production
       url: http://$PRODUCTION_DOMAIN
    when: manual
+   only:
+      - main
    image:
       name: bitnami/kubectl:latest
       entrypoint: ['']
