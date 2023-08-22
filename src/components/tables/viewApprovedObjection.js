@@ -1,6 +1,5 @@
 import { formatNumber } from "../../functions/numbers";
 import * as Icons from '../Icons/index';
-import dateformat from "dateformat";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import 'react-toastify/dist/ReactToastify.css';
@@ -135,7 +134,9 @@ export const ViewApprovedObjectionSingle = ({
   const [textareaValue, setTextareaValue] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [status, setStatus] = useState('');
-
+  const router = useRouter();
+  const componentRef = useRef();
+  
   const { auth } = useSelector(
     (state) => ({
       auth: state.authentication.auth,
@@ -216,8 +217,7 @@ export const ViewApprovedObjectionSingle = ({
   };
 
 
-  const router = useRouter();
-  const componentRef = useRef();
+ 
   const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
   let today = new Date().toLocaleDateString('en-us', options);
   let timeCreated = new Date(apprObjData.createtime).toDateString()
@@ -435,7 +435,7 @@ export const ViewApprovedObjectionSingle = ({
                         :
                         <div>
                           {apprObjData.notice === "document_review" ?
-                            <div className="text-justify text-base max-w-prose" >
+                            <div className="text-justify text-sm  max-w-prose" style={{fontSize: '16.5px'}}>
                               <p className="flex justify-between mt-3"> <span>{apprObjData.file_ref}</span> {today}  </p>
                               <p>{apprObjData.taxPayerName}</p>
                               <p>{apprObjData.kgtin}</p>
@@ -467,16 +467,17 @@ export const ViewApprovedObjectionSingle = ({
                                 Otherwise submit the following document for the year <span className="font-bold">{apprObjData.year}</span> to enable
                                 us carry out proper assessment in consideration of your objection:
                               </p><br />
-                              <ul>
-                                <li>1. Audited financial statements</li>
-                                <li>2. Bank accounts of the directors and</li>
-                                <li>3. Any other relevant document to that effect</li>
-                              </ul>
-                              <br />
+                              <section>
+                                <ul>
+                                  <li>1. Audited financial statements</li>
+                                  <li>2. Bank accounts of the directors and</li>
+                                  <li>3. Any other relevant document to that effect</li>
+                                </ul>
+                              </section><br />
                               <p>
                                 Yours Faithfully..
                               </p>
-                              <p>For:<span className="font-bold">KOGI STATE INTERNAL REVENUE SERVICE </span></p><br />
+                              <p>For: <span className="font-bold">  STATE INTERNAL REVENUE SERVICE </span></p><br />
                               <SignatureCol />
                               <p className="font-bold">Sule Salihu Enehe</p>
                               Executive Chairman

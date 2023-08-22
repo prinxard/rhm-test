@@ -1,19 +1,14 @@
 import Widget from '../widget'
 import SectionTitle from '../section-title';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-import axios from "axios";
-import url from '../../config/url';
+import { useEffect, useState } from 'react';
 import Loader from 'react-loader-spinner';
-import setAuthToken from '../../functions/setAuthToken';
 import { ViewApprovedObjectionSingle } from '../tables/viewApprovedObjection';
 
 
 const ViewSingleApprovedObjection = () => {
   const router = useRouter();
   const [isFetching, setIsFetching] = useState(() => true);
-  const [globalAssId, setGlobalAssId] = useState("")
-
 
   const [apprObjData, setApprObjData] = useState({})
 
@@ -21,9 +16,7 @@ const ViewSingleApprovedObjection = () => {
   useEffect(() => {
     if (router && router.query) {
       let routerData = String(router.query.ref);
-      let kgtin = routerData.split('_').pop()
       let assessmentId = routerData.split('_').shift()
-      setGlobalAssId(assessmentId)
       let payLoad = { assessment_id: assessmentId }
       const fetchPost = async () => {
         try {
