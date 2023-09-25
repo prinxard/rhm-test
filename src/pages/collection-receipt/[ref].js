@@ -59,22 +59,10 @@ export default function Index() {
                         setIsFetching(false)
                         let res = [data.body];
                         setColData(res)
-                        console.log("res", res);
                     } catch (e) {
                         console.log(e);
                         setIsFetching(false)
                     }
-                    // axios.get(`${urlNew}getpayment.php?paymentref=${paymentID}&by=assessment`)
-                    //     .then(function (response) {
-                    //         let res = response.data.body;
-                    //         setColData(() => [response.data.body])
-                    //         console.log("res", res);
-                    //         setIsFetching(false)
-                    //     })
-                    //     .catch(function (error) {
-                    //         setIsFetching(false)
-                    //         console.log(error);
-                    //     })
                 }
                 else {
                     try {
@@ -88,15 +76,7 @@ export default function Index() {
                     }
                 }
             };
-            // const fetchPost = async () => {
-            //     try {
-            //         let res = await axios.post(`${url.BASE_URL}collection/view-collections`, paymentPayload);
-            //         res = res.data.body;
-            //         setColData(res)
-            //     } catch (e) {
-            //         console.log(e);
-            //     }
-            // };
+      
             fetchPost();
         }
     }, [router]);
@@ -190,8 +170,7 @@ export default function Index() {
                             <div className="grid grid-cols-6 gap-2">
                                 <p>Details:</p>
                                 <div className="col-span-3">
-                                    <p> {el?.revenueItem} </p>
-                                    {/* <small>{el.revenueItem}</small> */}
+                                    <p> {el.revenueItem || el.details } </p>
                                 </div>
                             </div>
                             <div className="grid grid-cols-6 gap-2">
@@ -205,12 +184,12 @@ export default function Index() {
                             <div className="grid grid-cols-6 gap-2">
                                 <p>AGENCY:</p>
                                 <div className="col-span-3">
-                                    <p> INTERNAL REVENUE SERVICE </p>
+                                    <p> { el?.mda || el?.revenueItem || "KOGI STATE INTERNAL REVENUE SERVICE (KGIRS)"} </p>
                                 </div>
                             </div>
                             <div className="grid grid-cols-6 gap-2">
                                 <p>TAX STATION:</p>
-                                <p> {el.station || "-"} </p>
+                                <p> {el?.station || "-"} </p>
                             </div>
                             <div className="border-b-2 mt-3 w-4/4 ">
                             </div>

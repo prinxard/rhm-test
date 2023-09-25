@@ -1,7 +1,7 @@
-// import MaterialTable from "material-table";
+import MaterialTable from "material-table";
 import Search from '@material-ui/icons/Search'
 import * as Icons from '../../components/Icons/index';
-import { Delete, Edit, MoreHoriz } from "@material-ui/icons";
+import { Edit, MoreHoriz } from "@material-ui/icons";
 import SaveAlt from '@material-ui/icons/SaveAlt'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import ChevronRight from '@material-ui/icons/ChevronRight'
@@ -14,7 +14,6 @@ import Clear from "@material-ui/icons/Clear";
 import { useRouter } from "next/router";
 import { shallowEqual, useSelector } from "react-redux";
 import jwt from "jsonwebtoken";
-import MaterialTable from '@material-table/core';
 
 
 const fields = [
@@ -60,10 +59,8 @@ export default function IndividualReportstable({ FilteredData }) {
 
     let items = FilteredData
 
-    const { config, palettes, auth } = useSelector(
+    const { auth } = useSelector(
         (state) => ({
-            config: state.config,
-            palettes: state.palettes,
             auth: state.authentication.auth,
         }),
         shallowEqual
@@ -102,7 +99,12 @@ export default function IndividualReportstable({ FilteredData }) {
                     search: true,
                     paging: true,
                     filtering: true,
-                    actionsColumnIndex: -1
+                    exportButton: {
+                        csv: true,
+                        pdf: false
+                    },
+                    actionsColumnIndex: -1,
+                    exportAllData: true
                 }}
                 icons={{
                     Check: Check,

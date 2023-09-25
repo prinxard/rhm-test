@@ -11,7 +11,6 @@ import { useRouter } from 'next/router';
 
 export default function Index() {
     const [taxOffice, setTaxOffice] = useState([])
-    const [sector, setSector] = useState([])
     const [incomeSource, setIncomSource] = useState([])
     const [state, setState] = useState([])
     const [isFetching, setIsFetching] = useState(false)
@@ -25,7 +24,7 @@ export default function Index() {
     } = useForm()
 
     const kogiLga = lga.filter(item => item.jtb_states === 22);
- 
+
 
     useEffect(() => {
 
@@ -36,13 +35,11 @@ export default function Index() {
                 console.log(res);
                 let itemsBody = res.data.body
                 let taxOffice = itemsBody.taxOffice
-                let sector = itemsBody.sector
                 let incSource = itemsBody.incomeSource
                 let stat = itemsBody.state
                 let lg = itemsBody.lga
                 setIncomSource(incSource)
                 setTaxOffice(taxOffice)
-                setSector(sector)
                 setState(stat)
                 setLga(lg)
             } catch (e) {
@@ -54,7 +51,6 @@ export default function Index() {
     }, []);
 
     const onSubmit = (data) => {
-        console.log(data);
         setIsFetching(true)
         axios.post(`${url.BASE_URL}taxpayer/new-individual`, data)
             .then(function (response) {
@@ -102,8 +98,9 @@ export default function Index() {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid grid-cols-3 gap-4">
                         <div className="form-group ">
-                            <p>Title</p>
-                            <select name="indv_title" ref={register()} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                            <p>Title <span className="text-red-400">*</span></p>
+                            <select name="indv_title" required ref={register()} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                                <option value="">Please Select</option>
                                 <option value="Mr">Mr</option>
                                 <option value="Mrs">Mrs</option>
                                 <option value="Mrss">Miss</option>
@@ -111,15 +108,15 @@ export default function Index() {
                         </div>
 
                         <div className="form-group">
-                            <p>Surname</p>
-                            <input name="surname" type="text" className="form-control mb-4 w-full rounded font-light text-gray-500" ref={register({ required: "Surname is required" })}
+                            <p>Surname <span className="text-red-400">*</span></p>
+                            <input name="surname" required type="text" className="form-control mb-4 w-full rounded font-light text-gray-500" ref={register({ required: "Surname is required" })}
                             />
                             {errors.surname && <small className="text-red-600">{errors.surname.message}</small>}
                         </div>
 
                         <div className="form-group ">
-                            <p>First Name</p>
-                            <input name="first_name" ref={register({ required: "First name is required" })} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500"
+                            <p>First Name <span className="text-red-400">*</span></p>
+                            <input name="first_name" required ref={register({ required: "First name is required" })} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500"
                             />
                             {errors.first_name && <small className="text-red-600">{errors.first_name.message}</small>}
                         </div>
@@ -131,23 +128,24 @@ export default function Index() {
                         </div>
 
                         <div className="form-group ">
-                            <p>Date of Birth</p>
-                            <input name="birth_date" ref={register({ required: "Birthdate is required" })} type="date" className="form-control mb-4 w-full rounded font-light text-gray-500"
+                            <p>Date of Birth <span className="text-red-400">*</span></p>
+                            <input name="birth_date" required ref={register({ required: "Birthdate is required" })} type="date" className="form-control mb-4 w-full rounded font-light text-gray-500"
                             />
                             {errors.birth_date && <small className="text-red-600">{errors.birth_date.message}</small>}
                         </div>
 
 
                         <div className="form-group ">
-                            <p>Phone Number</p>
-                            <input name="phone_number" ref={register({ required: "Phone number is Required" })} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500"
+                            <p>Phone Number <span className="text-red-400">*</span></p>
+                            <input name="phone_number" required ref={register({ required: "Phone number is Required" })} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500"
                             />
                             {errors.phone_number && <small className="text-red-600">{errors.phone_number.message}</small>}
                         </div>
 
                         <div className="form-group ">
-                            <p>Gender</p>
-                            <select name="gender" ref={register({ required: "Gender is Required" })} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                            <p>Gender <span className="text-red-400">*</span></p>
+                            <select name="gender" required ref={register({ required: "Gender is Required" })} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                                <option value="">Please Select</option>
                                 <option value="Female">Female</option>
                                 <option value="Male">Male</option>
                             </select>
@@ -155,8 +153,9 @@ export default function Index() {
                         </div>
 
                         <div className="form-group ">
-                            <p>Marital Status</p>
-                            <select name="marital_status" ref={register()} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                            <p>Marital Status <span className="text-red-400">*</span></p>
+                            <select name="marital_status" required ref={register()} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                                <option value="">Please Select</option>
                                 <option value="Single">Single</option>
                                 <option value="Married">Married</option>
                             </select>
@@ -169,8 +168,9 @@ export default function Index() {
                         </div>
 
                         <div className="form-group ">
-                            <p>LGA</p>
-                            <select name="lga" ref={register({ required: "LGA is Required" })} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                            <p>LGA <span className="text-red-400">*</span></p>
+                            <select name="lga" required ref={register({ required: "LGA is Required" })} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                                <option value="">Please Select</option>
                                 {kogiLga.map((lg) => <option key={lg.idlga} value={lg.name}>{lg.name}</option>)}
                             </select>
                             {errors.lga && <small className="text-red-600">{errors.lga.message}</small>}
@@ -181,8 +181,9 @@ export default function Index() {
                             />
                         </div>
                         <div className="form-group ">
-                            <p>Tax Office</p>
-                            <select name="tax_office" ref={register({ required: "Tax office is Required" })} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                            <p>Tax Office <span className="text-red-400">*</span></p>
+                            <select name="tax_office" required ref={register({ required: "Tax office is Required" })} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
+                                <option value="">Please Select</option>
                                 {taxOffice.map((office) => <option key={office.idstation} value={office.station_code}>{office.name}</option>)}
                             </select>
                             {errors.tax_office && <small className="text-red-600">{errors.tax_office.message}</small>}
@@ -204,15 +205,9 @@ export default function Index() {
                             />
                         </div>
 
-                        {/* <div className="form-group ">
-                            <p>NIN</p>
-                            <input name="nin" ref={register()} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500"
-                            />
-                        </div> */}
-
                         <div className="form-group ">
-                            <p>Birth Place</p>
-                            <input name="birth_place" ref={register({ required: "Birth Place is Required" })} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500"
+                            <p>Birth Place <span className="text-red-400">*</span></p>
+                            <input name="birth_place" required ref={register({ required: "Birth Place is Required" })} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500"
                             />
                             {errors.birth_place && <small className="text-red-600">{errors.birth_place.message}</small>}
                         </div>
@@ -259,39 +254,16 @@ export default function Index() {
                                 {state.map((st) => <option key={st.jtb_idstates} value={st.jtb_idstates}>{st.state}</option>)}
                             </select>
                         </div>
-                        {/* <div className="form-group ">
-                            <p>Sector</p>
-                            <select name="sector" ref={register()} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
-                                {sector.map((sect) => <option key={sect.id} value={sect.sector_name}>{sect.sector_name}</option>)}
-                            </select>
-                        </div> */}
-                        {/* <div className="form-group ">
-                            <p>Category</p>
-                            <select name="category" ref={register()} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
-                                <option value="Agric">Agric</option>
-                                <option value="Fishery">Fishery</option>
-                            </select>
-                        </div> */}
-
                         <div className="form-group ">
                             <p>Income Source</p>
                             <select name="income_source" ref={register()} className="form-control SlectBox mb-4 w-full rounded font-light text-gray-500">
                                 {incomeSource.map((src) => <option key={src.id} value={src.source}>{src.source}</option>)}
                             </select>
                         </div>
-                        <div className="form-group ">
+                        {/* <div className="form-group col-span-2">
                             <p>Tax Authority</p>
-                            <input readOnly name="tax_authority" value="KGIRS" ref={register()} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500" />
-                        </div>
-                        {/* <div className="form-group ">
-                            <p>Employer TIN</p>
-                            <input name="employer_tin" ref={register()} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500" />
-                        </div>
-                        <div className="form-group ">
-                            <p>Employer's Name</p>
-                            <input name="employer_name" ref={register()} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500" />
+                            <input readOnly name="tax_authority" value="Kogi State Internal Revenue Service" ref={register()} type="text" className="form-control mb-4 w-full rounded font-light text-gray-500" />
                         </div> */}
-
                     </div>
 
                     <div className="mb-6 flex justify-center">
