@@ -67,7 +67,7 @@ deploy_stage:
    script:
       - echo $CI_COMMIT_SHORT_SHA
       - kubectl config get-contexts
-      - kubectl config use-context bespoqueng/rhmlive:rhm-agent
+      - kubectl config use-context bespoqueng/quick-pay:bespoque-agent
       - kubectl get pods -n kgirs-dev
       - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./manifest/rhm-deployment.yaml
       - sed -i "s/%%EVN%%/test/" ./manifest/rhm-deployment.yaml
@@ -90,7 +90,7 @@ deploy_prod:
    script:
       - echo $CI_COMMIT_SHORT_SHA
       - kubectl config get-contexts
-      - kubectl config use-context bespoqueng/rhmlive:rhm-agent
+      - kubectl config use-context bespoqueng/quick-pay:bespoque-agent
       - kubectl get pods -n kgirs
       - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./manifest/rhm-deployment.yaml
       - sed -i "s/%%EVN%%/prod/" ./manifest/rhm-deployment.yaml
