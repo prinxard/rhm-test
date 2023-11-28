@@ -75,6 +75,7 @@ deploy_stage:
       - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./manifest/rhm-deployment.yaml
       - sed -i "s/%%EVN%%/test/" ./manifest/rhm-deployment.yaml
       - sed -i "s/%%URL%%/$STAGING_DOMAIN/" ./manifest/rhm-app-ingress.yaml
+      - sed -i "s/%%TLSNAME%%/$TLS_NAME_STAGING/" ./manifest/rhm-app-ingress.yaml
       - kubectl apply -f ./manifest/. -n kgirs-dev
 
 deploy_prod:
@@ -98,5 +99,6 @@ deploy_prod:
       - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./manifest/rhm-deployment.yaml
       - sed -i "s/%%EVN%%/prod/" ./manifest/rhm-deployment.yaml
       - sed -i "s/%%URL%%/$PRODUCTION_DOMAIN/" ./manifest/rhm-app-ingress.yaml
+      - sed -i "s/%%TLSNAME%%/$TLS_NAME_LIVE/" ./manifest/rhm-app-ingress.yaml
       - kubectl apply -f ./manifest/. -n kgirs
 
