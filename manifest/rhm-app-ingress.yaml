@@ -21,3 +21,7 @@ spec:
                 port:
                   # Replace '80' with the port on which your Node.js application is running
                   number: 80
+  tls:
+    - hosts:
+      - %%URL%%
+      secretName: %%TLSNAME%%
