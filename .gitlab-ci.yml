@@ -7,10 +7,12 @@ stages:
    - deploy production
 
 variables:
-   STAGING_DOMAIN: rhm-dev.hrsystems.com.ng
-   PRODUCTION_DOMAIN: rhm.hrsystems.com.ng
+   STAGING_DOMAIN: dev.rhmapp.irs.kg.gov.ng
+   PRODUCTION_DOMAIN: rhmapp.irs.kg.gov.ng
    TEST_DB: rhmapi
    LIVE_DB: rhmlive
+   TLS_NAME_LIVE: rhmapp-tls
+   TLS_NAME_STAGINIG: rhmappstag-tls
 
 start_app:
    stage: test
@@ -59,6 +61,7 @@ deploy_stage:
    environment:
       name: staging
       url: http://$STAGING_DOMAIN
+   when: manual
    only:
       - main
    image:
