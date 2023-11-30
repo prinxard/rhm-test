@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { FormatMoneyComponentReport } from '../../../components/FormInput/formInputs'
-import CertDesign from './cert-design';
 import { useRouter } from 'next/router';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,7 +11,6 @@ import setAuthToken from '../../../functions/setAuthToken';
 
 export default function AuditCert() {
     const [fixedValues, Amount] = useState({ amount: 0 });
-    const [formData, setFormData] = useState(null);
     const router = useRouter()
     const [userInfo, setUserInfo] = useState(() => { });
     const [isFetchingUserInfo, setIsFetchingUserInfo] = useState(false);
@@ -55,17 +53,23 @@ export default function AuditCert() {
     };
 
     const submitForm = (data) => {
-        router.push({
-            pathname: '/view/tax-audit/cert-design',
-            query: { formData: JSON.stringify(data) },
-        });
+        let formFields = (data)
+        if (formFields?.revItem?.length === 0) {
+            alert("Please select Revenue Item")
+        } else {
+
+            router.push({
+                pathname: '/view/tax-audit/cert-design',
+                query: { formData: JSON.stringify(data) },
+            });
+        }
     }
     return (
-        <div>
+        <div className="flex justify-center">
             {isFetchingUserInfo && <ProcessorSpinner />}
-            <h5 className="text-center mb-4">Generate Tax Audit Certificate</h5>
-            <form onSubmit={handleSubmit(submitForm)}>
-                <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit(submitForm)} >
+                <h5 className="text-center mb-4">Generate Tax Audit Certificate</h5>
+                <div className="grid grid-cols-2 gap-2">
                     <div className="form-group">
                         <p>TAX Id</p>
                         <input
@@ -138,64 +142,187 @@ export default function AuditCert() {
                                 PAYE AND INVESTIGATION CLEARANCE CERTIFICATE
                             </option>
                         </select>
+
                     </div>
 
-                    <div className="form-group ">
-                        <p>Audit start date</p>
-                        <Controller
-                            name="sdate"
-                            control={control}
-                            // defaultValue={new Date()}
-                            render={({ onChange, value }) => {
-                                return (
-                                    <DatePicker
-                                        className="form-control w-full rounded"
-                                        onChange={onChange}
-                                        selected={value}
-                                        showYearPicker
-                                        dateFormat="yyyy"
-                                        yearItemNumber={8}
-                                        placeholderText="Select Year"
-                                        required={true}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="form-group">
+                            <div className="space-y-2">
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="PAYE"
+                                        ref={register()}
+                                        className="form-checkbox"
                                     />
-                                );
-                            }}
-                        />
-                    </div>
-
-                    <div className="form-group ">
-                        <p>Audit end date</p>
-                        <Controller
-                            name="edate"
-                            control={control}
-                            // defaultValue={new Date()}
-                            render={({ onChange, value }) => {
-                                return (
-                                    <DatePicker
-                                        className="form-control w-full rounded"
-                                        onChange={onChange}
-                                        selected={value}
-                                        showYearPicker
-                                        dateFormat="yyyy"
-                                        yearItemNumber={8}
-                                        placeholderText="Select Year"
+                                    <label htmlFor="PAYE">PAYE</label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="Withholding"
+                                        ref={register()}
+                                        className="form-checkbox"
                                     />
-                                );
-                            }}
-                        />
+                                    <label htmlFor="Withholding Tax">Withholding Tax</label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="Business Premises"
+                                        ref={register()}
+                                        className="form-checkbox"
+                                    />
+                                    <label htmlFor="Business Premises">Business Premises</label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="Development Levies"
+                                        ref={register()}
+                                        className="form-checkbox"
+                                    />
+                                    <label htmlFor="Development Levies">Development Levies</label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="Social Service"
+                                        ref={register()}
+                                        className="form-checkbox"
+                                    />
+                                    <label htmlFor="Social Service">Social Service</label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="Stamp Duty"
+                                        ref={register()}
+                                        className="form-checkbox"
+                                    />
+                                    <label htmlFor="Stamp Duty">Stamp Duty</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <div className="space-y-2">
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="Fire Service Fee"
+                                        ref={register()}
+                                        className="form-checkbox"
+                                    />
+                                    <label htmlFor="Fire Service Fee">Fire Service Fee</label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="Signage Fee"
+                                        ref={register()}
+                                        className="form-checkbox"
+                                    />
+                                    <label htmlFor="Signage Fee">Signage Fee</label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="Ground Rent"
+                                        ref={register()}
+                                        className="form-checkbox"
+                                    />
+                                    <label htmlFor="Ground Rent">Ground Rent</label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value="Capital Gain"
+                                        ref={register()}
+                                        className="form-checkbox"
+                                    />
+                                    <label htmlFor="Capital Gain">Capital Gain Tax</label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="revItem"
+                                        value=" Haulage Fee"
+                                        ref={register()}
+                                        className="form-checkbox"
+                                    />
+                                    <label htmlFor=" Haulage Fee"> Haulage Fee</label>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="form-group">
-                        <p>Address</p>
-                        <textarea
-                            name="address"
-                            required
-                            ref={register()}
-                            className="form-control mb-4 w-full rounded font-light text-gray-500"
-                            cols="30" rows="2"
-                            defaultValue={userInfo?.address || ""}
-                        >
-                        </textarea>
+
+                    <div className=" gap-1">
+                        <div className="form-group ">
+                            <p>Audit start date</p>
+                            <Controller
+                                name="sdate"
+                                control={control}
+                                render={({ onChange, value }) => {
+                                    return (
+                                        <DatePicker
+                                            className="form-control w-full rounded"
+                                            onChange={onChange}
+                                            selected={value}
+                                            showYearPicker
+                                            dateFormat="yyyy"
+                                            yearItemNumber={8}
+                                            placeholderText="Select Year"
+                                            required={true}
+                                        />
+                                    );
+                                }}
+                            />
+                        </div>
+
+                        <div className="form-group ">
+                            <p>Audit end date</p>
+                            <Controller
+                                name="edate"
+                                control={control}
+                                render={({ onChange, value }) => {
+                                    return (
+                                        <DatePicker
+                                            className="form-control w-full rounded"
+                                            onChange={onChange}
+                                            selected={value}
+                                            showYearPicker
+                                            dateFormat="yyyy"
+                                            yearItemNumber={8}
+                                            placeholderText="Select Year"
+                                        />
+                                    );
+                                }}
+                            />
+                        </div>
+                        <div className="justify-self-end">
+                            <p>Address</p>
+                            <textarea
+                                name="address"
+                                required
+                                ref={register()}
+                                className="form-control mb-4 w-full rounded font-light text-gray-500"
+                                cols="30" rows="2"
+                                defaultValue={userInfo?.address || ""}
+                            >
+                            </textarea>
+                        </div>
                     </div>
 
                 </div>
@@ -210,9 +337,6 @@ export default function AuditCert() {
                     </button>
                 </div>
             </form>
-            <div className="hidden">
-                {formData && <CertDesign formData={formData} />}
-            </div>
         </div>
     )
 }
