@@ -210,7 +210,7 @@ export const ViewSingleCompletedTable = ({ assId, payerArr, assobj, taxcal,
       status: "Approved",
     }
     try {
-      let res = await axios.put(`${url.BASE_URL}forma/set-status`, apprDataObj);
+      await axios.put(`${url.BASE_URL}forma/set-status`, apprDataObj);
       setIsFetching3(false)
       toast.success("Success!");
       router.push('/view/completeddirect')
@@ -229,7 +229,7 @@ export const ViewSingleCompletedTable = ({ assId, payerArr, assobj, taxcal,
       status: "Verified",
     }
     try {
-      let res = await axios.put(`${url.BASE_URL}forma/set-status`, bojDataObj);
+      await axios.put(`${url.BASE_URL}forma/set-status`, bojDataObj);
       setIsFetching3(false)
       router.push('/view/listverifiedboj')
     } catch (error) {
@@ -249,7 +249,7 @@ export const ViewSingleCompletedTable = ({ assId, payerArr, assobj, taxcal,
       status: "Declined"
     }
     try {
-      let res = await axios.put(`${url.BASE_URL}forma/set-status`, declineDataObj);
+    await axios.put(`${url.BASE_URL}forma/set-status`, declineDataObj);
       setIsFetching2(false)
       router.push('/view/completeddirect')
       toast.success("Success!");
@@ -267,7 +267,7 @@ export const ViewSingleCompletedTable = ({ assId, payerArr, assobj, taxcal,
     data.assessment_id = assessment_id
 
     try {
-      const response = await fetch("https://bespoque.dev/rhm-live/fix/fix-update-assessmentamount.php", {
+      const response = await fetch("https://rhmapi2.irs.kg.gov.ng/fix/fix-update-assessmentamount.php", {
         method: "POST",
         body: JSON.stringify(data)
       })
@@ -558,7 +558,7 @@ export const ViewSingleCompletedTable = ({ assId, payerArr, assobj, taxcal,
               </tr>
               <tr>
                 <td className="border-r-2 p-1">Employment</td>
-                {assobj == null || assobj == ""
+                {assobj === null || assobj === ""
                   ? <td className="p-1 text-right font-bold">0</td> :
                   <td className='p-1 text-right font-bold'>{formatNumber(assobj?.employed)}</td>
                 }

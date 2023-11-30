@@ -635,7 +635,8 @@ export const ViewSingleApprovedTable = React.forwardRef((props, ref) => {
                     </tr>
                     <tr>
                       <td className='tb'><div align='right' className='style16 font-bold'>Additional Assessment </div></td>
-                      <td className='tb'><div align='right' className='font-bold'>{formatNumber(Number(assobj?.tax) - (Number(taxcal.tax) + Number(taxcal.devy_levy)))}</div></td>
+                      {/* Number(assobj?.tax) - (Number(taxcal.tax) + Number(taxcal.devy_levy)) */}
+                      <td className='tb'><div align='right' className='font-bold'>{formatNumber(0)}</div></td>
                     </tr>
                     <tr>
                       <td className='tb'><div align='right' className='style16 font-bold'>Set off WHT </div></td>
