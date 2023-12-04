@@ -415,7 +415,7 @@ export const ViewSinglePayeTccPrintTable = ({
                           <p className="font-bold">{formatNumber(PayeTccData.taxYr_2)}</p>
                         </td>
                         <td className="">
-                          <p>PAYE</p>
+                          <p>{PayeTccData.taxYr_3_type} || PAYE</p>
                         </td>
 
                       </tr>
