@@ -418,7 +418,6 @@ export const ViewSinglePayeTccPrintTable = ({
                         <td className="">
                           <p>PAYE</p>
                         </td>
-
                       </tr>
 
                       <tr>
