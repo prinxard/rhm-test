@@ -234,6 +234,7 @@ export const ViewSinglePayeTccPrintTable = ({
 
   } else { console.log(false); }
 
+  console.log("PayeTccData.taxYr_3_type", PayeTccData.taxYr_3_type);
 
   return (
     <>
@@ -415,7 +416,7 @@ export const ViewSinglePayeTccPrintTable = ({
                           <p className="font-bold">{formatNumber(PayeTccData.taxYr_2)}</p>
                         </td>
                         <td className="">
-                          <p>{PayeTccData.taxYr_3_type} || PAYE</p>
+                          <p> PAYE</p>
                         </td>
 
                       </tr>
@@ -436,7 +437,7 @@ export const ViewSinglePayeTccPrintTable = ({
                           <p className="font-bold">{formatNumber(PayeTccData.taxYr_3)}</p>
                         </td>
                         <td className="">
-                          <p>PAYE</p>
+                          <p>{PayeTccData.taxYr_3_type || "PAYE"} </p>
                         </td>
 
                       </tr>
