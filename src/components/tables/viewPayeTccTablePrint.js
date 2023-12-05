@@ -1,4 +1,3 @@
-
 import { formatNumber } from "../../functions/numbers";
 import * as Icons from '../Icons/index';
 import dateformat from "dateformat";
@@ -154,6 +153,7 @@ export const ViewSinglePayeTccPrintTable = ({
   oldSign
 }) => {
 
+  
   let basdocurl = 'https://annualuploads.bespoque.dev/rhm-live/uploads/paye/tcc/'
 
   let date = PayeTccData.aprvPrint_time
@@ -416,7 +416,7 @@ export const ViewSinglePayeTccPrintTable = ({
                           <p className="font-bold">{formatNumber(PayeTccData.taxYr_2)}</p>
                         </td>
                         <td className="">
-                          <p> PAYE</p>
+                          <p>PAYE</p>
                         </td>
 
                       </tr>
@@ -437,7 +437,7 @@ export const ViewSinglePayeTccPrintTable = ({
                           <p className="font-bold">{formatNumber(PayeTccData.taxYr_3)}</p>
                         </td>
                         <td className="">
-                          <p>{PayeTccData.taxYr_3_type || "PAYE"} </p>
+                        <p>{PayeTccData?.taxYr_3_type  || "PAYE"}</p>
                         </td>
 
                       </tr>
