@@ -277,7 +277,7 @@ export const ViewSingleCompletedTable = ({ assId, payerArr, assobj, taxcal,
         toast.error(dataFetch.message);
       } else {
         toast.success(dataFetch.message);
-        // router.push("/view/completeddirect")
+        router.push("/view/completeddirect")
       }
     } catch (error) {
       setIsFetching2(false)
@@ -675,12 +675,12 @@ export const ViewSingleCompletedTable = ({ assId, payerArr, assobj, taxcal,
                 <td className="border-r-2 p-1 text-right font-bold">Total Tax due </td>
                 <td className='p-1 text-right font-bold'>{formatNumber(Number(assobj?.dev_levy) + Number(assobj?.tax))}</td>
               </tr>
-              {/* <tr>
+              <tr>
                 <td className="border-r-2 p-1 text-right font-bold">Additional Assessment</td>
 
                 <td className="p-1 text-right font-bold">{formatNumber((Number(assobj?.dev_levy) + Number(assobj?.tax)) - Number(taxcal?.tax))}</td>
 
-              </tr> */}
+              </tr>
               <tr>
                 <td className="border-r-2 p-1 text-right font-bold">Set off WHT </td>
                 <td className="p-1 text-right font-bold">0</td>
