@@ -9,7 +9,7 @@ import { ViewDraftObjectionTable } from "../tables/viewDraftObjectionTable";
 const ViewDraftObjection = () => {
   const [post, setPost] = useState(() => []);
   const [isFetching, setIsFetching] = useState(() => true);
-  const newUrl = 'https://rhmapi2.irs.kg.gov.ng/'
+  const newUrl = 'https://bespoque.dev/rhm-live/'
   useEffect(() => {
     let num = 1
     setAuthToken();
