@@ -9,8 +9,8 @@ import { SubmitButton } from '../CustomButton/CustomButton';
 import axios from 'axios';
 import url from '../../config/url';
 import { FiX, FiCheck } from 'react-icons/fi';
-import { SelectAnnual, SelectMonth } from '../forms/selects';
-import { SampleCsv, SampleCsvMonthly } from '../Images/Images';
+import { SelectAnnual } from '../forms/selects';
+import { SampleCsv } from '../Images/Images';
 import { FiArrowDown } from 'react-icons/fi';
 import setAuthToken from '../../functions/setAuthToken';
 import { ProcessorSpinner } from '../spiner/index';
@@ -25,9 +25,8 @@ const AnnualUploadForm = () => {
   const [open, setOpen] = useState(false);
   const [uploadSuccessful, setUploadSuccessful] = useState(() => false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  const { register, handleSubmit } = useForm();
   const router = useRouter();
-
+  const { station, year, kgTin } = router.query;
   const { palettes } = useSelector(
     (state) => ({
       palettes: state.palettes,
@@ -50,6 +49,7 @@ const AnnualUploadForm = () => {
     }
   };
 
+  const urlTemp =  "https://dev.rhmapi.irs.kg.gov.ng/api/v1/"
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!modalRef || !modalRef.current) return false;
@@ -59,7 +59,7 @@ const AnnualUploadForm = () => {
       setOpen(!open);
       setUploadErrors(() => []);
       if (uploadSuccessful) {
-        router.push('/view/annual');
+        router.push('/paye-annual');
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -93,17 +93,20 @@ const AnnualUploadForm = () => {
   };
 
   //handle submit
-  const handleUpload = async (data) => {
-    console.log(data.year)
-    let payPeriod = `${data.year}-01-01`;
+  const handleUpload = async (event) => {
+    event.preventDefault()
+    // let payPeriod = `${year}-01-01`;
+    let payPeriod = year;
     const formData = new FormData();
     formData.append('payPeriod', payPeriod);
     formData.append('csv', file);
+    formData.append('station', station);
+    formData.append('kgTin', kgTin);
 
     setAuthToken();
     setSubmitting(() => true);
     try {
-      await axios.post(`${url.BASE_URL}annual/upload-annual`, formData, {
+      await axios.post(`${urlTemp}annual/upload-annual`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -147,20 +150,14 @@ const AnnualUploadForm = () => {
             }`}
         />
       )}
-
+      <div className="flex justify-end">
+        <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded my-2" onClick={() => router.back()}>
+          Back
+        </button>
+      </div>
       <SectionTitle title="Schedule Uploads" subtitle="Annual PAYE Returns" />
       <Widget>
-        <form onSubmit={handleSubmit(handleUpload)}>
-          <div className="flex flex-col lg:flex-row lg:flex-wrap w-full lg:space-x-4">
-            <div className="w-full lg:w-1/12">
-              <SelectAnnual
-                label="Select Year"
-                required
-                ref={register()}
-                name="year"
-              />
-            </div>
-          </div>
+        <form onSubmit={handleUpload}>
           <div>
             <div>
               <input
@@ -207,7 +204,7 @@ const AnnualUploadForm = () => {
                   <div className="relative p-4 flex-auto">
                     <div className="flex items-start justify-start p-2 space-x-4">
                       <div className="flex-shrink-0 w-12">
-                        {uploadErrors.length > 0 ? (
+                        {uploadErrors?.length > 0 ? (
                           <span className="h-10 w-10 bg-red-100 text-white flex items-center justify-center rounded-full text-lg font-display font-bold">
                             <FiX
                               size={18}
@@ -225,15 +222,15 @@ const AnnualUploadForm = () => {
                       </div>
                       <div className="w-full">
                         <div className="text-lg mb-2 font-bold">
-                          {uploadErrors.length > 0 ? (
+                          {uploadErrors?.length > 0 ? (
                             <span>Failed to Upload</span>
                           ) : uploadSuccessful ? (
                             <span>Upload Successful</span>
                           ) : null}
                         </div>
                         <div className="overflow-auto max-h-64">
-                          {uploadErrors.length > 0 &&
-                            uploadErrors.map((err, i) => (
+                          {uploadErrors?.length > 0 &&
+                            uploadErrors?.map((err, i) => (
                               <li className="text-red-500" key={i}>
                                 {err}
                               </li>
@@ -263,22 +260,12 @@ const AnnualUploadForm = () => {
             <SampleCsv />
             <div className="flex justify-center">
               <div className="">
-                {/* <NewButton
-                  title={`Download csv sheet`}
-                  icon={<FiArrowDown size="16" />}
-                  color="green"
-                  type="button"
-                /> */}
                 <Link legacyBehavior href="/csv/annual_returns_csv.csv">
                   <a className="flex overflow-hidden btn btn-default btn-outlined  mr-4 bg-transparent text-green-500 hover:text-green-700 border-green-500 hover:border-green-700">
                     <FiArrowDown size="16" className="animate-bounce" />
                     Download sample CSV
                   </a>
                 </Link>
-
-                {/* <NewButton title="user guide" color="blue" type="button" /> */}
-
-
               </div>
             </div>
           </div>

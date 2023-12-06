@@ -51,6 +51,7 @@ const LoginForm = () => {
     reValidateMode: "onChange",
   });
   const SubmitHandler = (data) => {
+    // console.log("data", data);
     dispatch(login(data));
   };
   return (

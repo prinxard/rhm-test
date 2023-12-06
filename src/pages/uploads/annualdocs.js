@@ -1,5 +1,4 @@
-import AnnualDocsUploadForm from "../../components/Form/AnnualDocsUpload";
+import AnnualSupDocs from "../../components/Form/AnnualDocsUpload";
 
-
-const Index = () => <AnnualDocsUploadForm />;
+const Index = () => <AnnualSupDocs />;
 export default Index;
