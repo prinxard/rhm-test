@@ -45,11 +45,10 @@ const AnnualUploadForm = () => {
     setUploadErrors([]);
     setUploadSuccessful(false);
     if (uploadSuccessful) {
-      router.push('/view/annual');
+      router.push('/paye-annual');
     }
   };
 
-  const urlTemp =  "https://dev.rhmapi.irs.kg.gov.ng/api/v1/"
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!modalRef || !modalRef.current) return false;
@@ -106,7 +105,7 @@ const AnnualUploadForm = () => {
     setAuthToken();
     setSubmitting(() => true);
     try {
-      await axios.post(`${urlTemp}annual/upload-annual`, formData, {
+      await axios.post(`${url.BASE_URL}annual/upload-annual`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

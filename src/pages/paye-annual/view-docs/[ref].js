@@ -5,19 +5,17 @@ import setAuthToken from '../../../functions/setAuthToken';
 import axios from "axios";
 import url from '../../../config/url';
 import { useForm } from 'react-hook-form';
-import ReactDatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { shallowEqual, useSelector } from 'react-redux';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import jwt from "jsonwebtoken";
-import Link from 'next/link';
+
 
 function ViewAnnualDocs() {
     const [isFetching, setIsFetching] = useState(() => true);
     const [uploadedDocs, setDocuments] = useState([])
     const [tableListYear, setTableListYear] = useState("")
-    const [startDate, setStartDate] = useState(new Date());
     const [submitStatus, setStatus] = useState("")
     const [declineModal, setDeclineModal] = useState(false);
     const [kgtin, setKgtin] = useState(false);
@@ -25,16 +23,14 @@ function ViewAnnualDocs() {
 
     const router = useRouter();
 
-    const { config, palettes, auth } = useSelector(
+    const { auth } = useSelector(
         (state) => ({
-            config: state.config,
-            palettes: state.palettes,
             auth: state.authentication.auth,
         }),
         shallowEqual
     );
 
-    
+
     const verify = [29, 1]
     const approve = [30, 1]
     const decoded = jwt.decode(auth);
@@ -71,7 +67,6 @@ function ViewAnnualDocs() {
 
                     let response = await axios.post(`${url.BASE_URL}annual/view-annual-uploads`, data)
                     let docs = response.data.body.uploads;
-                    console.log("docs", docs);
                     setDocuments(docs)
                     setIsFetching(false);
                 } catch (error) {
@@ -90,11 +85,8 @@ function ViewAnnualDocs() {
         return doc.doc_name
     })
 
-    const indReturnLetter = uploadedDocs.filter(c => c.doc_title === "indv_return_letter")
 
-    const indReturnL = indReturnLetter.map((doc) => {
-        return doc.doc_name
-    })
+
 
     const expertriateLetter = uploadedDocs.filter(c => c.doc_title === "exp_order_letter")
 
@@ -120,10 +112,7 @@ function ViewAnnualDocs() {
         return doc.doc_name
     })
 
-    const TrialBal = uploadedDocs.filter(c => c.doc_title === "endyr_trial_bal")
-    const TrialBalance = TrialBal.map((doc) => {
-        return doc.doc_name
-    })
+
 
     const withHoldingTaxDeduct = uploadedDocs.filter(c => c.doc_title === "wht_tax_deduct")
     const withTaxD = withHoldingTaxDeduct.map((doc) => {
@@ -192,7 +181,7 @@ function ViewAnnualDocs() {
             year: year
         }
         try {
-            let res = await axios.post(`${url.BASE_URL}annual/annual-returns-status`, verifyDoc);
+            await axios.post(`${url.BASE_URL}annual/annual-returns-status`, verifyDoc);
             setIsFetching(false)
             router.push('/paye-annual')
             toast.success("Success!");
@@ -212,7 +201,7 @@ function ViewAnnualDocs() {
             year: year
         }
         try {
-            let res = await axios.post(`${url.BASE_URL}annual/annual-returns-status`, appDoc);
+            await axios.post(`${url.BASE_URL}annual/annual-returns-status`, appDoc);
             setIsFetching(false)
             router.push('/paye-annual')
             toast.success("Success!");
@@ -294,14 +283,8 @@ function ViewAnnualDocs() {
 
             )}
             <div>
-                <div className="flex justify-between">
-                    <button
-                        className="btn bg-purple-400 btn-default text-white btn-outlined bg-transparent rounded-md"
-                        type="submit"
-                        onClick={() => router.back()}
-                    >
-                        Back
-                    </button>
+                <div className="flex justify-between mb-4">
+
 
                     <button
                         className="btn bg-purple-400 btn-default text-white btn-outlined bg-transparent rounded-md"
@@ -309,6 +292,14 @@ function ViewAnnualDocs() {
                         onClick={() => router.back(`/paye-annual/view-csv/${kgtin}_${year}_${submitStatus}`)}
                     >
                         View schedule
+                    </button>
+
+                    <button
+                        className="btn bg-gray-400 btn-default text-white btn-outlined bg-transparent rounded-md"
+                        type="submit"
+                        onClick={() => router.back()}
+                    >
+                        Back
                     </button>
 
                 </div>
@@ -379,13 +370,6 @@ function ViewAnnualDocs() {
 
                 }
 
-                {/* <ReactDatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    showYearPicker
-                    dateFormat="yyyy"
-                    className="form-control mb-3 rounded"
-                /> */}
 
                 <p className="font-bold flex justify-center">Year {tableListYear} - {submitStatus}</p>
                 <div className="grid justify-items-start">
@@ -397,7 +381,8 @@ function ViewAnnualDocs() {
                     <div className="flex">
                         {coverL.map((element, i) => (
                             <div key={i} className="p-2">
-                                <a href={`https://annualuploads.bespoque.dev/portal-live/uploads/annual-returns/cover_letter/${element}`} target="_blank" className="underline underline-offset-4 text-blue-600">Download</a>
+                                {/* <a href={`https://annualuploads.bespoque.dev/portal-live/uploads/annual-returns/cover_letter/${element}`} target="_blank" className="underline underline-offset-4 text-blue-600">Download</a> */}
+                                <a href={`https://annualuploads.bespoque.dev/portal/uploads/annual-returns/cover_letter/${element}`} target="_blank" className="underline underline-offset-4 text-blue-600">Download</a>
                             </div>
                         ))}
                     </div>

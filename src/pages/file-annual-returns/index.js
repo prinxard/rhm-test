@@ -79,7 +79,7 @@ export default function Index() {
             alert("Please provide year and taxpayer Id!")
         }
         else {
-            router.push(`/uploads/annualdocs?year=${selectedYear}$kgtin=${tpkgtin}&station=${tpOffice}`)
+            router.push(`/uploads/annualdocs?year=${selectedYear}&kgtin=${tpkgtin}&station=${tpOffice}`)
         }
     }
 
@@ -130,8 +130,8 @@ export default function Index() {
                     </div>
                     <div className="flex justify-center">
                         <ul>
-                            <li className="my-4"><button onClick={() => goToUploadcsv()} className="underline">Upload CSV Schedule</button></li>
-                            <li><button onClick={() => goToUploaddoc()} className="underline">Upload Supporting Documents</button></li>
+                            <li className="my-4 btn bg-purple-400 btn-default text-white btn-outlined bg-transparent rounded-md"><button  onClick={() => goToUploadcsv()} >Upload CSV Schedule</button></li>
+                            <li className="my-4 btn bg-green-400 btn-default text-white btn-outlined bg-transparent rounded-md"><button  onClick={() => goToUploaddoc()}>Upload Supporting Documents</button></li>
                         </ul>
                     </div>
                 </div>
