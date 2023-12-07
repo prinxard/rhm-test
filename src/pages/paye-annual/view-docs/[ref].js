@@ -183,10 +183,10 @@ function ViewAnnualDocs() {
         try {
             await axios.post(`${url.BASE_URL}annual/annual-returns-status`, verifyDoc);
             setIsFetching(false)
-            router.push('/paye-annual')
             toast.success("Success!");
+            router.push('/paye-annual')
         } catch (error) {
-            toast.error("Failed!");
+            // toast.error("Failed!");
             console.log(error);
             setIsFetching(false)
         }
@@ -203,10 +203,10 @@ function ViewAnnualDocs() {
         try {
             await axios.post(`${url.BASE_URL}annual/annual-returns-status`, appDoc);
             setIsFetching(false)
-            router.push('/paye-annual')
             toast.success("Success!");
+            router.push('/paye-annual')
         } catch (error) {
-            toast.error("Failed!");
+            // toast.error("Failed!");
             console.log(error);
             setIsFetching(false)
         }
