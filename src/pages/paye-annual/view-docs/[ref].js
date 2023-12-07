@@ -229,7 +229,7 @@ function ViewAnnualDocs() {
                 console.log(response);
             })
             .catch(function (error) {
-                toast.error("Failed!");
+                // toast.error("Failed!");
                 setIsFetching(false)
             })
     }
