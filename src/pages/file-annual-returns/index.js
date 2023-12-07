@@ -127,7 +127,6 @@ export default function Index() {
                                 <option value={"2023"}>2023</option>
                             </select>
                         </div>
-
                     </div>
                     <div className="flex justify-center">
                         <ul>
