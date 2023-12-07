@@ -388,23 +388,8 @@ function ViewAnnualDocs() {
                     </div>
 
                 </div>
-                {/* 
-                <hr />
-
-                <div className="grid justify-items-start">
-                    <div>
-                        <div className="font-semibold">
-                            Individual tax returns letter
-                        </div>
-                    </div>
-                    <div className="flex">
-                        {indReturnL.map((element, i) => (
-                            <div key={i} className="p-2">
-                                <a href={`https://annualuploads.bespoque.dev/portal-live/uploads/annual-returns/indv_return_letter/${element}`} target="_blank" className="underline underline-offset-4 text-blue-600">Download</a>
-                            </div>
-                        ))}
-                    </div>
-                </div> */}
+                
+     
 
                 <hr />
 
@@ -471,20 +456,6 @@ function ViewAnnualDocs() {
                     </div>
                 </div>
 
-                {/* <hr />
-
-                <div className="grid justify-items-start">
-                    <div className="font-semibold">
-                        Trial balance for Year ending
-                    </div>
-                    <div className="flex">
-                        {TrialBalance.map((element, i) => (
-                            <div key={i} className="p-2">
-                                <a target="_blank" href={`https://annualuploads.bespoque.dev/portal-live/uploads/annual-returns/endyr_trial_bal/${element}`} className="underline underline-offset-4 text-blue-600">Download</a>
-                            </div>
-                        ))}
-                    </div>
-                </div> */}
 
                 <hr />
 
